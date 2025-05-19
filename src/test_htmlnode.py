@@ -2,7 +2,7 @@ import unittest
 
 from htmlnode import HTMLNode
 
-class TextHTMLNode(unittest.TestCase):
+class TestHTMLNode(unittest.TestCase):
   def test_empty_props(self):
     html = HTMLNode("p", "hello ebryone", None, None)
     self.assertEqual(html.props_to_html(), "")
