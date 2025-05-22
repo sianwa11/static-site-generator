@@ -1,15 +1,46 @@
+import re
+
 from textnode import *
-from leafnode import LeafNode
 from htmlnode import HTMLNode
+from parentnode import ParentNode
+
+
+
+
+def extract_markdown_images(text):
+    # return re.findall(r"\w+ !\[(\w+)\]\((.*?)\)", text)
+    return re.findall(r"!\[([^\[\]]*)\]\(([^\(\)]*)\)", text)
+
+
+def extract_markdown_links(text):
+    return re.findall(r"(?<!!)\[([^\[\]]*)\]\(([^\(\)]*)\)", text)
+
+
+
+def split_nodes_delimiter(old_nodes, delimiter, text_type):
+    new_nodes = []
+    for old_node in old_nodes:
+        if old_node.text_type != TextType.TEXT:
+            new_nodes.append(old_node)
+            continue
+
+        splitted = old_node.text.split(delimiter)
+
+        if len(splitted) % 2 == 0:
+            raise Exception("Invalid markdown syntax")
+        split_nodes = []
+        for i in range(len(splitted)):
+            if splitted[i] == "":
+                continue
+            if i % 2 == 0:
+                split_nodes.append(TextNode(splitted[i], TextType.TEXT))
+            else:
+                split_nodes.append(TextNode(splitted[i], text_type))
+        new_nodes.extend(split_nodes)
+    return new_nodes
+
 
 def main():
-#  new_node = TextNode("This is some anchor text", TextType.LINK , "https://www.boot.dev")
- leaf_node = LeafNode("p", "This is a paragraph of text.").to_html()
- leaf_node2 = LeafNode("a", "Click me!", {"href": "https://www.google.com"}).to_html()
- leaf_node3 = LeafNode("div", "Waaaah", {"class": "fa fa-trash", 'id': 'btn'}).to_html()
- print(leaf_node)
- print(leaf_node2)
- print(leaf_node3)
- 
+    pass
 
 main()

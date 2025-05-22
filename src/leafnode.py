@@ -17,6 +17,9 @@ class LeafNode(HTMLNode):
     if self.props != None:
       opening_tag = opening_tag.replace(">", f" {self.props_to_html()}>")
 
+    if self.tag == "img":
+      return opening_tag.replace(">", f"{self.value}/>")
+
     return f"{opening_tag}{self.value}{closing_tag}"
   
   def __repr__(self):
