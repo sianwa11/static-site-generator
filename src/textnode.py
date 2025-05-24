@@ -35,13 +35,13 @@ def text_node_to_html_node(text_node):
   
   match text_node.text_type:
       case TextType.TEXT:
-          return LeafNode(None, text_node.text)
+          return LeafNode(None, text_node.text.replace("\n", " "))
       
       case TextType.BOLD:
-          return LeafNode("b", text_node.text)
+          return LeafNode("b", text_node.text.replace("\n", " "))
       
       case TextType.ITALIC:
-          return LeafNode("i", text_node.text)
+          return LeafNode("i", text_node.text.replace("\n", " "))
       
       case TextType.CODE:
           return LeafNode("code", text_node.text)
@@ -50,7 +50,7 @@ def text_node_to_html_node(text_node):
           url = ""
           if text_node.url != None:
               url = text_node.url
-          return LeafNode("a", text_node.text, {"href": url})
+          return LeafNode("a", text_node.text.replace("\n", " "), {"href": url})
       
       case TextType.IMAGE:
           url = ""
@@ -58,7 +58,7 @@ def text_node_to_html_node(text_node):
               url = text_node.url
           text = ""
           if text_node.text != None:
-              text = text_node.text
+              text = text_node.text.replace("\n", " ")
           return LeafNode("img", "", {"src": url, "alt": text})
 
       case _:
