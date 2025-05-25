@@ -68,7 +68,7 @@ def block_to_htmlnode(block):
       case BlockType.HEADING:
          text = block.split("#")
          tag = f"h{len(text)-1}"
-         children = text_to_textnodes(text)
+         children = text_to_textnodes(text[1])
          nodes = list(map(lambda text_node: text_node_to_html_node(text_node) ,children))
 
          return ParentNode(tag, nodes)
