@@ -59,7 +59,7 @@ def generate_page_recursive(dir_path_content, template_path, dest_dir_path, base
       if not os.path.exists(directory):
         os.mkdir(directory)
         print(f"Made directory: {directory}")
-      generate_page_recursive(filepath, template_path, directory)
+      generate_page_recursive(filepath, template_path, directory, basepath)
 
   pass
 
