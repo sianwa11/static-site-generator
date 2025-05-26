@@ -1,4 +1,5 @@
 import re
+import os
 
 from block_markdown import markdown_to_html_node
 
@@ -28,8 +29,6 @@ def generate_page(from_path, template_path, dest_path):
   except:
     raise Exception(f"Something went wrong writing to {dest_path}")
  
-  pass
-
 def read_and_store(path):
   try:
     content = open(path, 'r')
@@ -42,6 +41,27 @@ def read_and_store(path):
   except:
     raise Exception(f"File {path} not found")
 
+
+def generate_page_recursive(dir_path_content, template_path, dest_dir_path):
+  if not os.path.exists(dir_path_content):
+    raise Exception(f"{dir_path_content} does not exist")
+  
+  for filename in os.listdir(dir_path_content):
+    filepath = os.path.join(dir_path_content, filename)
+    if os.path.isfile(filepath):
+      print(f"writing to {dest_dir_path}/index.html")
+      content = f"{dir_path_content}/index.md"
+      dest = f"{dest_dir_path}/index.html"
+      generate_page(content, template_path, dest)
+    else:
+      print(f"recurse...{filename}")
+      directory = f"{dest_dir_path}/{filename}"
+      if not os.path.exists(directory):
+        os.mkdir(directory)
+        print(f"Made directory: {directory}")
+      generate_page_recursive(filepath, template_path, directory)
+
+  pass
 
 
 # generate_page("./content/index.md", "./template.html", "./index.html")

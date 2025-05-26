@@ -61,6 +61,23 @@ def block_to_block_type(block):
   return BlockType.PARAGRAPH
 
 
+def text_to_children(text):
+   text_nodes = text_to_textnodes(text)
+   children = []
+   for text_node in text_nodes:
+      html_node = text_node_to_html_node(text_node)
+      children.append(html_node)
+   return children
+
+def olist_to_html_node(block):
+   items = block.split("\n")
+   html_items = []
+   for item in items:
+      text = item[3:]
+      children = text_to_children(text)
+      html_items.append(ParentNode("li", children))
+   return ParentNode("ol", html_items)
+
 def block_to_htmlnode(block):
    block_type = block_to_block_type(block)
 
@@ -68,7 +85,7 @@ def block_to_htmlnode(block):
       case BlockType.HEADING:
          text = block.split("#")
          tag = f"h{len(text)-1}"
-         children = text_to_textnodes(text[1])
+         children = text_to_textnodes(text[1].strip())
          nodes = list(map(lambda text_node: text_node_to_html_node(text_node) ,children))
 
          return ParentNode(tag, nodes)
@@ -79,27 +96,40 @@ def block_to_htmlnode(block):
 
       case BlockType.QUOTE:
          quotes_arr = block.split(">")
-         quotes = "".join(quotes_arr[1:])
+         quotes = "".join(quotes_arr[1:]).strip()
 
          return LeafNode("blockquote", quotes)
       
       case BlockType.ULIST:
-         list_arr = block.split("-")
-         nodes = []
-         for list_item in list_arr:
-            if list_item == "":
+         items = block.split("\n")
+         html_items = []
+         for item in items:
+            if item == "":
                continue
-            nodes.append(LeafNode("li", list_item))
-                 
-         return ParentNode("ul", nodes)
+            text = item[2:]
+            children = text_to_children(text)
+            html_items.append(ParentNode("li", children))
+         return ParentNode("ul", html_items)
+         # list_arr = block.split("-")
+         # nodes = []
+         # for list_item in list_arr:
+         #    if list_item == "":
+         #       continue
+         #    nodes.append(LeafNode("li", list_item))
+         # return ParentNode("ul", nodes)
       
       case BlockType.OLIST:
-         list_arr = block.split("\n")
-         nodes = []
-         for list_item in list_arr:
-            nodes.append(LeafNode("li", list_item))
+         return olist_to_html_node(block)
+         # list_arr = block.split("\n")
+         # nodes = []
+         # for i in range(len(list_arr)):
+         #    item = list_arr[i].replace(f"{i+1}. ", "")
+         #    # text_nodes = text_to_textnodes(item)
+         #    # nodes.extend(list(map(lambda text_node: text_node_to_html_node(text_node) ,text_nodes)))
+
+         #    nodes.append(LeafNode("li", item))
             
-         return ParentNode("ol", nodes)
+         # return ParentNode("ol", nodes)
 
       case _:
          text_nodes = text_to_textnodes(block)
