@@ -11,7 +11,7 @@ def extract_title(markdown):
   
   return heading.group(1)
 
-def generate_page(from_path, template_path, dest_path):
+def generate_page(from_path, template_path, dest_path, basepath=None):
   print(f"Generating page from {from_path} to {dest_path} using {template_path}")
 
   md = read_and_store(from_path)
@@ -20,7 +20,7 @@ def generate_page(from_path, template_path, dest_path):
   html = markdown_to_html_node(md).to_html()
   title = extract_title(md)
 
-  result = template.replace("{{ Title }}", title).replace("{{ Content }}", html)
+  result = template.replace("{{ Title }}", title).replace("{{ Content }}", html).replace("href=/", f"href={basepath}").replace("src=/", f"src={basepath}")
   
   try:
     html_file = open(dest_path, "w")
@@ -42,7 +42,7 @@ def read_and_store(path):
     raise Exception(f"File {path} not found")
 
 
-def generate_page_recursive(dir_path_content, template_path, dest_dir_path):
+def generate_page_recursive(dir_path_content, template_path, dest_dir_path, basepath=None):
   if not os.path.exists(dir_path_content):
     raise Exception(f"{dir_path_content} does not exist")
   
@@ -52,7 +52,7 @@ def generate_page_recursive(dir_path_content, template_path, dest_dir_path):
       print(f"writing to {dest_dir_path}/index.html")
       content = f"{dir_path_content}/index.md"
       dest = f"{dest_dir_path}/index.html"
-      generate_page(content, template_path, dest)
+      generate_page(content, template_path, dest, basepath)
     else:
       print(f"recurse...{filename}")
       directory = f"{dest_dir_path}/{filename}"
