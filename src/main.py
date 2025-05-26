@@ -10,9 +10,6 @@ def main():
     if len(sys.argv) > 1:
         basepath = sys.argv[1]
 
-    print("Basepath+++++")
-    print(basepath)
-
     root = Path(__file__).resolve().parent.parent
 
 

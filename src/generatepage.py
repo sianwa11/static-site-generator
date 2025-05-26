@@ -20,7 +20,7 @@ def generate_page(from_path, template_path, dest_path, basepath=None):
   html = markdown_to_html_node(md).to_html()
   title = extract_title(md)
 
-  result = template.replace("{{ Title }}", title).replace("{{ Content }}", html).replace("href=/", f"href={basepath}").replace("src=/", f"src={basepath}")
+  result = template.replace("{{ Title }}", title).replace("{{ Content }}", html).replace('href="/', f'href="{basepath}').replace('src="/', f'src="{basepath}')
   
   try:
     html_file = open(dest_path, "w")
