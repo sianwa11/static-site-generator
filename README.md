@@ -1,1 +1,1 @@
-blud needs a streak 
+I said!Blud needs a streak.
